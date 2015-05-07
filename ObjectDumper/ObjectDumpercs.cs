@@ -28,11 +28,6 @@ namespace ObjectDumper
 
             var key = length >= 2 ? nameSegments[length - 2] + "." + nameSegments[length - 1] : name;
 
-            //if (index.HasValue && index == 0)
-            //{
-            //    key = key + "[0]";
-            //}
-
             var origKey = key;
             var count = 0;
             while (_dic.Contains(key))
@@ -49,10 +44,6 @@ namespace ObjectDumper
             }
             else
             {
-                //if (key.Contains("Account") || key.Contains("account") || key.Contains("Acnt"))
-                //{
-                //    strValue = string.Format(new AccountFormatter(), "{0}", strValue);
-                //}
                 _dic.Add(key, strValue);
             }
         }
@@ -143,7 +134,7 @@ namespace ObjectDumper
                 else
                 {
                     var members = element.GetType().GetMembers(BindingFlags.Public | BindingFlags.Instance);
-                    foreach (MemberInfo m in members)
+                    foreach (var m in members)
                     {
                         var f = m as FieldInfo;
                         var p = m as PropertyInfo;
@@ -167,10 +158,10 @@ namespace ObjectDumper
                             var p = m as PropertyInfo;
                             if (f != null || p != null)
                             {
-                                Type t = f != null ? f.FieldType : p.PropertyType;
+                                var t = f != null ? f.FieldType : p.PropertyType;
                                 if (!(t.IsValueType || t == typeof(string)))
                                 {
-                                    object value = f != null ? f.GetValue(element) : p.GetValue(element, null);
+                                    var value = f != null ? f.GetValue(element) : p.GetValue(element, null);
                                     if (value != null)
                                     {
                                         _level++;
@@ -210,7 +201,6 @@ namespace ObjectDumper
                     {
                         listValues.Append(item);
                         listValues.Append(", ");
-                        _writer.Write(name, listValues.ToString(), ind);
                     }
                     else
                     {
@@ -220,6 +210,9 @@ namespace ObjectDumper
                         _level--;
                     }
                 }
+
+                if(listValues.Length > 0)
+                    _writer.Write(name, listValues.ToString(), ind);
             }
         }
     }
